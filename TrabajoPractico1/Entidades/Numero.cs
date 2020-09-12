@@ -10,22 +10,61 @@ namespace Entidades
     {
         private double numero;
 
-        public Numero()
+        #region Propiedad Set
+        /// <summary>
+        /// Valida y setea el valor del atributo privado numero
+        /// </summary>
+        public string SetNumero
         {
-            this.numero = 0;
-        }
-        
-        public Numero(double numero)
-        {
-            this.numero = numero;
+            set
+            {
+                double numero;
+
+                numero = this.ValidarNumero(value);
+
+                if (numero != 0)
+                {
+                    this.numero = numero;
+                }
+            }
         }
 
+        #endregion
+
+        #region Constructores
+        /// <summary>
+        /// Constructor que establece el valor del atributo numero en 0
+        /// </summary>
+        public Numero()
+        {
+            this.SetNumero = "0";
+        }
+
+        /// <summary>
+        /// Constructor que recibe un parametro de tipo double e iguala el atributo numero a el numero pasado por parametro
+        /// </summary>
+        /// <param name="numero">Numero que le dara valor al atributo privado numero</param>
+        public Numero(double numero)
+        {
+            this.SetNumero = numero.ToString();
+        }
+
+        /// <summary>
+        /// Constructor que recibe un parametro de tipo string e iguala el atributo numero a el numero pasado por parametro
+        /// </summary>
+        /// <param name="strNumero">Numero que le dara valor al atributo privado numero</param>
         public Numero(string strNumero)
         {
             this.SetNumero = strNumero;
         }
+        #endregion
 
-       
+        #region Metodos
+        /// <summary>
+        /// Convierte un numero decimal a binario
+        /// </summary>
+        /// <param name="numero">Numero a convertir</param>
+        /// <returns>El numero en binario(cadena), 0 si el numero es menor a 0 o "Valor invalido"</returns>
         public string DecimalBinario(double numero)
         {
             int auxNum;
@@ -60,19 +99,25 @@ namespace Entidades
             }
             else
             {
-                return "Valor Invalido";
+                return "Valor inválido";
             }
 
 
         }
+
+        /// <summary>
+        /// Convierte un numero decimal a binario, llama al DecimalBinario al cual se le pasa un double
+        /// </summary>
+        /// <param name="numero">Numero a convertir en formato string</param>
+        /// <returns>El numero en binario o si no se pudo parsear el numero "Valor invalido"</returns>
         public string DecimalBinario(string numero)
-        {           
+        {
             string numeroBinario;
             bool numeroValidado;
             double auxNumero;
 
             numeroValidado = double.TryParse(numero, out auxNumero);
-            if(numeroValidado)
+            if (numeroValidado)
             {
                 numeroBinario = DecimalBinario(auxNumero);
 
@@ -80,15 +125,20 @@ namespace Entidades
             }
             else
             {
-                return "Valor Invalido";
-            }    
+                return "Valor inválido";
+            }
 
         }
+        /// <summary>
+        /// Convierte un numero binario en decimal
+        /// </summary>
+        /// <param name="numero">Numero a convertir en formato string</param>
+        /// <returns>El numero convertido a decimal y si el numero a convertir no es binario "Valor invalido"</returns>
         public string BinarioDecimal(string numero)
         {
             bool validado;
-            
-            validado=EsBinario(numero);
+
+            validado = EsBinario(numero);
 
             if (validado)
             {
@@ -120,49 +170,45 @@ namespace Entidades
             {
                 return "Valor inválido";
             }
-            
-            
-        }
 
+
+        }
+        /// <summary>
+        /// Valida el numero pasado por parametro
+        /// </summary>
+        /// <param name="strNumero">Numero a validar</param>
+        /// <returns>El numero en formato double y si no se pudo parsear devuelve 0</returns>
         private double ValidarNumero(string strNumero)
         {
             bool validado;
 
-            validado = double.TryParse(strNumero,out double numero);
-            
-            if(validado== true)
+            validado = double.TryParse(strNumero, out double numero);
+
+            if (validado == true)
             {
                 return numero;
             }
 
-            return 0;           
+            return 0;
         }
 
-        public string SetNumero
-        {           
-            set 
-            {
-                double numero;
 
-                numero = this.ValidarNumero(value);
 
-                if (numero != 0)
-                {
-                    this.numero = numero;
-                }
-            }
-        }
-
+        /// <summary>
+        /// Valida si el numero pasado por parametro es binario
+        /// </summary>
+        /// <param name="str">Numero en formato string a validar</param>
+        /// <returns>True si es binario False si no lo es</returns>
         private bool EsBinario(string str)
         {
             bool aux = false;
 
-            foreach(char item in str)
+            foreach (char item in str)
             {
-                if(item == '0' || item == '1')
+                if (item == '0' || item == '1')
                 {
                     aux = true;
-                    
+
                 }
                 else
                 {
@@ -172,7 +218,15 @@ namespace Entidades
             }
             return aux;
         }
+        #endregion
 
+        #region Sobrecargas
+        /// <summary>
+        /// Sobrecarga del operador "+", realiza la operacion suma
+        /// </summary>
+        /// <param name="n1">Primer operando</param>
+        /// <param name="n2">Segundo operando</param>
+        /// <returns>El resultado de la suma</returns>
         public static double operator +(Numero n1, Numero n2)
         {
             double suma;
@@ -182,6 +236,12 @@ namespace Entidades
             return suma;
         }
 
+        /// <summary>
+        /// Sobrecarga del operador "-", realiza la operacion resta
+        /// </summary>
+        /// <param name="n1">Primer operando</param>
+        /// <param name="n2">Segundo operando</param>
+        /// <returns>El resultado de la resta</returns>
         public static double operator -(Numero n1, Numero n2)
         {
             double resta;
@@ -191,19 +251,31 @@ namespace Entidades
             return resta;
         }
 
+        /// <summary>
+        /// Sobrecarga del operador "/", realiza la operacion division
+        /// </summary>
+        /// <param name="n1">Primer operando</param>
+        /// <param name="n2">Segundo operando</param>
+        /// <returns>El resultado de la division si el segundo operando es mayo a 0 o si no lo es el minimo valor posible de un double</returns>
         public static double operator /(Numero n1, Numero n2)
         {
             double division;
-            
-            if(n2.numero != 0)
+
+            if (n2.numero != 0)
             {
-                division = n1.numero/n2.numero;
+                division = n1.numero / n2.numero;
                 return division;
             }
 
             return double.MinValue;
         }
 
+        /// <summary>
+        /// Sobrecarga del operador "*", realiza la operacion multiplicacion
+        /// </summary>
+        /// <param name="n1">Primer operando</param>
+        /// <param name="n2">Segundo operando</param>
+        /// <returns>El resultado de la multiplicacion</returns>
         public static double operator *(Numero n1, Numero n2)
         {
             double multiplicacion;
@@ -212,6 +284,6 @@ namespace Entidades
 
             return multiplicacion;
         }
-
+        #endregion
     }
 }
